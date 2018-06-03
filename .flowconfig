@@ -7,7 +7,6 @@ flow-typed/
 
 [options]
 module.file_ext=.js
-module.file_ext=.jsx
 munge_underscores=true
 esproposal.export_star_as=enable
 
