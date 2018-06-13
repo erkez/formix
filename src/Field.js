@@ -9,7 +9,7 @@ import { validateField } from './validation';
 type Props<A> = BoundProps<A> & {
     error: Option<string>,
     fieldState: FieldState<A>,
-    setFieldState: (FieldRef<A>, FieldState<A>) => void
+    setFieldState: (FieldRef<A>, $Shape<FieldState<A>>) => void
 };
 
 class Field<A> extends React.PureComponent<Props<A>> {
@@ -34,7 +34,7 @@ class Field<A> extends React.PureComponent<Props<A>> {
         }
 
         if (this.props.error.isDefined) {
-            this.props.setFieldState(this.props.field, Object.assign({}, state, { error: None }));
+            this.props.setFieldState(this.props.field, { error: None });
         } else if (state !== this.props.fieldState) {
             this.props.setFieldState(this.props.field, state);
         }
@@ -57,37 +57,22 @@ class Field<A> extends React.PureComponent<Props<A>> {
 
     performValidation(): void {
         if (!this.props.error.equals(this.props.fieldState.error)) {
-            this.props.setFieldState(
-                this.props.field,
-                Object.assign({}, this.props.fieldState, { error: this.props.error })
-            );
+            this.props.setFieldState(this.props.field, { error: this.props.error });
         }
     }
 
     setValue: $PropertyType<FieldBag<A>, 'setValue'> = value => {
-        this.props.setFieldState(
-            this.props.field,
-            Object.assign({}, this.props.fieldState, { value, touched: true })
-        );
+        this.props.setFieldState(this.props.field, { value, touched: true });
     };
 
     setDisabled: $PropertyType<FieldBag<A>, 'setDisabled'> = disabled =>
-        this.props.setFieldState(
-            this.props.field,
-            Object.assign({}, this.props.fieldState, { disabled })
-        );
+        this.props.setFieldState(this.props.field, { disabled });
 
     onFocus: $PropertyType<FieldBag<A>, 'onFocus'> = () =>
-        this.props.setFieldState(
-            this.props.field,
-            Object.assign({}, this.props.fieldState, { active: true, touched: true })
-        );
+        this.props.setFieldState(this.props.field, { active: true, touched: true });
 
     onBlur: $PropertyType<FieldBag<A>, 'onBlur'> = () =>
-        this.props.setFieldState(
-            this.props.field,
-            Object.assign({}, this.props.fieldState, { active: false })
-        );
+        this.props.setFieldState(this.props.field, { active: false });
 
     render() {
         return this.props.children(this.getFieldBag());

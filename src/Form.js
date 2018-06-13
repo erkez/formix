@@ -20,39 +20,15 @@ type Props<A, T: FieldRefType<any>> = {
     children: (FormBag<T>) => React.Node
 };
 
-type State<T> = {
-    fieldStates: $ElementType<FormContextValue, 'fieldStates'>,
-    formAccessors: FormAccessors,
+type State<T> = $Exact<{
+    context: FormContextValue,
     formBag: FormBag<T>
-};
+}>;
 
-class Form<A, T: FieldRefType<any>> extends React.PureComponent<Props<A, T>, State<T>> {
+class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T>> {
     static defaultProps = {
         resetOnInitialValueChange: false
     };
-
-    constructor(props: Props<A, T>) {
-        super(props);
-
-        this.state = {
-            formAccessors: {
-                getFieldState: this.getFieldState,
-                getArrayFieldState: this.getArrayFieldState
-            },
-            formBag: Object.freeze({
-                fields: this.props.fieldsInitializer(this.props.initialValue),
-                getFieldState: this.getFieldState,
-                getArrayFieldState: this.getArrayFieldState,
-                resetForm: this.resetForm,
-                handleSubmit: this.submitForm,
-                submitForm: this.submitForm,
-                setSubmitting: this.setSubmitting,
-                isSubmitting: false,
-                isValid: true
-            }),
-            fieldStates: Map()
-        };
-    }
 
     componentDidUpdate(previousProps: Props<A, T>) {
         let fieldInitializerChanged =
@@ -67,34 +43,47 @@ class Form<A, T: FieldRefType<any>> extends React.PureComponent<Props<A, T>, Sta
 
     getFieldState: $ElementType<FormAccessors, 'getFieldState'> = fieldRef =>
         // $FlowFixMe
-        this.state.fieldStates.get(fieldRef, fieldRef.initialState);
+        this.state.context.fieldStates.get(fieldRef, fieldRef.initialState);
 
     getArrayFieldState: $ElementType<FormAccessors, 'getArrayFieldState'> = fieldRef =>
-        this.state.fieldStates.get(fieldRef, fieldRef.initialState);
+        // $FlowFixMe
+        this.state.context.fieldStates.get(fieldRef, fieldRef.initialState);
 
     setFieldState: $ElementType<FormContextValue, 'setFieldState'> = (fieldRef, newState) => {
         this.setState(s => {
-            let fieldStates = s.fieldStates.set(fieldRef, Object.freeze(newState));
-            let formBag = updateFormBag(s.formBag, {
-                isValid: fieldStates.every(state => state.error.isEmpty)
-            });
-            return { fieldStates, formBag };
+            let fieldStates = s.context.fieldStates.update(fieldRef,
+                (previousState = fieldRef.initialState) => Object.assign({}, previousState, newState)
+            );
+            let context = Object.assign({}, s.context, { fieldStates });
+
+            let formBag = s.formBag;
+            let isValid = fieldStates.every(state => state.error.isEmpty);
+
+            if (formBag.isValid !== isValid) {
+                formBag = updateFormBag(s.formBag, { isValid });
+            }
+
+            return { context, formBag };
         });
     };
 
     valuesToJS: () => any = () => {
-        return extractFieldValues(this.state.formBag.fields, this.state.fieldStates);
+        return extractFieldValues(this.state.formBag.fields, this.state.context.fieldStates);
     };
 
     resetForm: () => void = () => {
-        let fields = this.props.fieldsInitializer(this.props.initialValue);
-        let fieldStates = Map();
-        let formBag = updateFormBag(this.state.formBag, {
-            fields,
-            isSubmitting: false,
-            isValid: true
+        this.setState(s => {
+            let context = Object.assign({}, s.context, { fieldStates: Map() });
+
+            let fields = this.props.fieldsInitializer(this.props.initialValue);
+            let formBag = updateFormBag(s.formBag, {
+                fields,
+                isSubmitting: false,
+                isValid: true
+            });
+
+            return { context, formBag };
         });
-        this.setState({ formBag, fieldStates });
     };
 
     submitForm: (e?: SyntheticEvent<HTMLFormElement>) => void = event => {
@@ -120,14 +109,31 @@ class Form<A, T: FieldRefType<any>> extends React.PureComponent<Props<A, T>, Sta
         });
     };
 
+    state: State<T> = {
+        context: {
+            formAccessors: {
+                getFieldState: this.getFieldState,
+                getArrayFieldState: this.getArrayFieldState
+            },
+            fieldStates: Map(),
+            setFieldState: this.setFieldState
+        },
+        formBag: Object.freeze({
+            fields: this.props.fieldsInitializer(this.props.initialValue),
+            getFieldState: this.getFieldState,
+            getArrayFieldState: this.getArrayFieldState,
+            resetForm: this.resetForm,
+            handleSubmit: this.submitForm,
+            submitForm: this.submitForm,
+            setSubmitting: this.setSubmitting,
+            isSubmitting: false,
+            isValid: true
+        })
+    };
+
     render() {
         return (
-            <Provider
-                value={{
-                    fieldStates: this.state.fieldStates,
-                    formAccessors: this.state.formAccessors,
-                    setFieldState: this.setFieldState
-                }}>
+            <Provider value={this.state.context}>
                 {this.props.children(this.state.formBag)}
             </Provider>
         );

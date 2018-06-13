@@ -20,13 +20,13 @@ export type StatefulFieldRef<A> = FieldRef<A> | ArrayFieldRef<any, A>;
 
 export type FieldRefType<A> = { [key: string]: any } | StatefulFieldRef<A>;
 
-export type FieldState<A> = $ReadOnly<{
+export type FieldState<A> = {
     value: A,
     error: Option<string>,
     disabled: boolean,
     active: boolean,
     touched: boolean
-}>;
+};
 
 export type ArrayFieldState<A> = FieldState<List<A>>;
 
@@ -85,5 +85,5 @@ export type FormSubmitBag<T> = FormAccessors &
 export type FormContextValue = $ReadOnly<{
     fieldStates: Map<StatefulFieldRef<any>, FieldState<any>>,
     formAccessors: FormAccessors,
-    setFieldState: (StatefulFieldRef<any>, FieldState<any>) => void
+    setFieldState: (StatefulFieldRef<any>, $Shape<FieldState<any>>) => void
 }>;

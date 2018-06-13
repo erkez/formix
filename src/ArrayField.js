@@ -17,7 +17,7 @@ import { validateField } from './validation';
 type Props<A, T> = BoundProps<A, T> & {
     error: Option<string>,
     fieldState: ArrayFieldState<T>,
-    setFieldState: (ArrayFieldRef<A, T>, ArrayFieldState<T>) => void
+    setFieldState: (ArrayFieldRef<A, T>, $Shape<ArrayFieldState<T>>) => void
 };
 
 type State<A, T> = {
@@ -47,10 +47,7 @@ class ArrayField<A, T: FieldRefType<any>> extends React.PureComponent<Props<A, T
                 error: props.fieldState.error,
                 disabled: props.fieldState.disabled,
                 setDisabled: disabled => {
-                    props.setFieldState(
-                        props.field,
-                        Object.assign({}, props.fieldState, { disabled })
-                    );
+                    props.setFieldState(props.field, { disabled });
                 },
                 map: fn => React.Children.toArray(props.fieldState.value.map(fn)),
                 move: (from, to) => {
@@ -120,19 +117,13 @@ class ArrayField<A, T: FieldRefType<any>> extends React.PureComponent<Props<A, T
 
     componentWillUnmount() {
         if (this.props.error.isDefined) {
-            this.props.setFieldState(
-                this.props.field,
-                Object.assign({}, this.props.fieldState, { error: None })
-            );
+            this.props.setFieldState(this.props.field, { error: None });
         }
     }
 
     performValidation(): void {
         if (!this.props.error.equals(this.props.fieldState.error)) {
-            this.props.setFieldState(
-                this.props.field,
-                Object.assign({}, this.props.fieldState, { error: this.props.error })
-            );
+            this.props.setFieldState(this.props.field, { error: this.props.error });
         }
     }
 
@@ -155,10 +146,7 @@ function checkIfUndefinedOrNativeEvent(e: any): %checks {
 }
 
 function updateFieldState<A, T>(props: Props<A, T>, updater: (List<T>) => List<T>): void {
-    props.setFieldState(
-        props.field,
-        Object.assign({}, props.fieldState, { value: updater(props.fieldState.value) })
-    );
+    props.setFieldState(props.field, { value: updater(props.fieldState.value) });
 }
 
 function checkBounds(items: List<any>, index: number): void {
