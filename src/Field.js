@@ -45,12 +45,13 @@ class Field<A> extends React.PureComponent<Props<A>> {
             return this.lastFieldBag;
         }
 
-        this.lastFieldBag = Object.assign({}, this.props.fieldState, {
+        this.lastFieldBag = {
+            ...this.props.fieldState,
             setValue: this.setValue,
             setDisabled: this.setDisabled,
             onFocus: this.onFocus,
             onBlur: this.onBlur
-        });
+        };
 
         return this.lastFieldBag;
     }

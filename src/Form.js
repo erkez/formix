@@ -51,10 +51,11 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
 
     setFieldState: $ElementType<FormContextValue, 'setFieldState'> = (fieldRef, newState) => {
         this.setState(s => {
-            let fieldStates = s.context.fieldStates.update(fieldRef,
-                (previousState = fieldRef.initialState) => Object.assign({}, previousState, newState)
+            let fieldStates = s.context.fieldStates.update(
+                fieldRef,
+                (previousState = fieldRef.initialState) => ({ ...previousState, ...newState })
             );
-            let context = Object.assign({}, s.context, { fieldStates });
+            let context = { ...s.context, fieldStates };
 
             let formBag = s.formBag;
             let isValid = fieldStates.every(state => state.error.isEmpty);
@@ -73,7 +74,7 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
 
     resetForm: () => void = () => {
         this.setState(s => {
-            let context = Object.assign({}, s.context, { fieldStates: Map() });
+            let context = { ...s.context, fieldStates: Map() };
 
             let fields = this.props.fieldsInitializer(this.props.initialValue);
             let formBag = updateFormBag(s.formBag, {
@@ -141,7 +142,7 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
 }
 
 function updateFormBag<T>(bag: FormBag<T>, obj: {}): FormBag<T> {
-    return Object.freeze(Object.assign({}, bag, obj));
+    return Object.freeze({ ...bag, ...obj });
 }
 
 export function withFormix<A, P: {}, WC: React.ComponentType<P>, T: FieldRefType<any>>({
