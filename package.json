@@ -1,6 +1,6 @@
 {
   "name": "@ekz/formix",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Type-safe React form to be used with Flow",
   "keywords": [
     "react",
@@ -30,10 +30,10 @@
     "LICENSE"
   ],
   "dependencies": {
-    "@ekz/option": "^1.0.5",
     "immutable": "^4.0.0-rc.9"
   },
   "peerDependencies": {
+    "@ekz/option": "^1.0.5",
     "react": "^16.3.2"
   },
   "devDependencies": {
