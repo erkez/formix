@@ -1,6 +1,6 @@
 {
   "name": "@ekz/formix",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Type-safe React form to be used with Flow",
   "keywords": [
     "react",
@@ -33,7 +33,7 @@
     "immutable": "^4.0.0-rc.9"
   },
   "peerDependencies": {
-    "@ekz/option": "^1.0.5",
+    "@ekz/option": "^1.2.0",
     "react": "^16.3.2"
   },
   "devDependencies": {
@@ -45,7 +45,7 @@
     "babel-preset-flow": "^6.23.0",
     "documentation": "^6.3.3",
     "eslint": "^4.1.1",
-    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-prettier": "^3.1.0",
     "eslint-plugin-flowtype": "^2.41.0",
     "eslint-plugin-prettier": "^2.1.1",
     "eslint-plugin-react": "^7.5.1",

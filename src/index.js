@@ -4,6 +4,7 @@ export { defineField, defineArrayField } from './FieldRefs';
 export { default as Form, withFormix } from './Form';
 export { default as Field } from './Field';
 export { default as ArrayField } from './ArrayField';
+export { default as FieldValue } from './FieldValue';
 export { default as OnChange } from './OnChange';
 export { WithFormAccessors, withFormAccessors } from './Context';
 
