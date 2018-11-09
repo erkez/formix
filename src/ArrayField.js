@@ -82,19 +82,11 @@ class ArrayField<A, T: FieldRefType<any>> extends React.PureComponent<Props<A, T
                 },
                 unshift: value => {
                     updateFieldState(props, items => {
-                        if (checkIfUndefinedOrNativeEvent(value)) {
-                            value = props.field.defaultItemValue;
-                        }
-
                         return items.unshift(props.field.itemTemplate(value));
                     });
                 },
                 push: value => {
                     updateFieldState(props, items => {
-                        if (checkIfUndefinedOrNativeEvent(value)) {
-                            value = props.field.defaultItemValue;
-                        }
-
                         return items.push(props.field.itemTemplate(value));
                     });
                 },
@@ -137,13 +129,6 @@ type BoundProps<A, T> = {
     validator?: FieldValidator<List<T>>,
     children: (ArrayFieldBag<A, T>) => React.Node
 };
-
-/**
- * Main purpose is to prevent misuse of optional argument
- */
-function checkIfUndefinedOrNativeEvent(e: any): %checks {
-    return typeof e === 'undefined' || (e.nativeEvent != null && e.nativeEvent instanceof Event);
-}
 
 function updateFieldState<A, T>(props: Props<A, T>, updater: (List<T>) => List<T>): void {
     props.setFieldState(props.field, { value: updater(props.fieldState.value) });

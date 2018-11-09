@@ -27,16 +27,9 @@ class ArrayFieldRefImpl<A, T: FieldRefType<any>> implements ArrayFieldRef<A, T> 
     type: 'List';
 
     itemTemplate: A => T;
-    defaultItemValue: A;
-
     initialState: ArrayFieldState<T>;
 
-    constructor(
-        initialItems: A[],
-        itemTemplate: A => T,
-        defaultItemValue: A,
-        initialDisabled: boolean = false
-    ) {
+    constructor(initialItems: A[], itemTemplate: A => T, initialDisabled: boolean = false) {
         Object.defineProperty(this, 'initialState', {
             value: makeInitialFieldState(
                 List(initialItems.map(item => itemTemplate(item))),
@@ -45,7 +38,6 @@ class ArrayFieldRefImpl<A, T: FieldRefType<any>> implements ArrayFieldRef<A, T> 
         });
 
         Object.defineProperty(this, 'itemTemplate', { value: itemTemplate });
-        Object.defineProperty(this, 'defaultItemValue', { value: defaultItemValue });
     }
 }
 
@@ -56,10 +48,9 @@ export function defineField<A>(initialValue: A, initialDisabled?: boolean): Fiel
 export function defineArrayField<A, T: FieldRefType<any>>(
     initialItems: A[],
     itemTemplate: A => T,
-    defaultItemValue: A,
     initialDisabled?: boolean
 ): ArrayFieldRef<A, T> {
-    return new ArrayFieldRefImpl(initialItems, itemTemplate, defaultItemValue, initialDisabled);
+    return new ArrayFieldRefImpl(initialItems, itemTemplate, initialDisabled);
 }
 
 export function extractFieldValues<A: FieldRefType<any>>(

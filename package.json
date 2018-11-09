@@ -1,6 +1,6 @@
 {
   "name": "@ekz/formix",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Type-safe React form to be used with Flow",
   "keywords": [
     "react",
