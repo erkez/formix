@@ -68,6 +68,33 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
         });
     };
 
+    _updateField = (fieldRef, updateState) => {
+        this.setState(s => {
+            let fieldStates = s.context.fieldStates.update(
+                fieldRef,
+                // $FlowFixMe
+                (previousState = fieldRef.initialState) => updateState(previousState)
+            );
+
+            let context = { ...s.context, fieldStates };
+
+            let formBag = s.formBag;
+            let isValid = fieldStates.every(state => state.error.isEmpty);
+
+            if (formBag.isValid !== isValid) {
+                formBag = updateFormBag(s.formBag, { isValid });
+            }
+
+            return { context, formBag };
+        });
+    };
+
+    _setFieldValue = (fieldRef, newValue, touched = true) =>
+        this._updateField(fieldRef, ps => ({ ...ps, value: newValue, touched }));
+
+    _setFieldDisabled = (fieldRef, disabled) =>
+        this._updateField(fieldRef, ps => ({ ...ps, disabled }));
+
     valuesToJS: () => any = () => {
         return extractFieldValues(this.state.formBag.fields, this.state.context.fieldStates);
     };
@@ -126,6 +153,8 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
             resetForm: this.resetForm,
             handleSubmit: this.submitForm,
             submitForm: this.submitForm,
+            setFieldValue: this._setFieldValue,
+            setFieldDisabled: this._setFieldDisabled,
             setSubmitting: this.setSubmitting,
             isSubmitting: false,
             isValid: true

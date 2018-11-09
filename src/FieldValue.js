@@ -18,7 +18,11 @@ function FieldValue<T>(props: Props<T>) {
 }
 
 function tryRender<T>(value: T): React.Node {
-    return React.isValidElement(value) ? (value: any) : JSON.stringify(value);
+    if (React.isValidElement(value)) {
+        return (value: any);
+    }
+
+    return typeof value === 'string' || typeof value === 'number' ? value : JSON.stringify(value);
 }
 
 export default FieldValue;

@@ -68,6 +68,8 @@ export type FormBag<T> = FormAccessors &
         resetForm: () => void,
         handleSubmit: (e: SyntheticEvent<HTMLFormElement>) => void,
         submitForm: () => void,
+        setFieldValue: <A>(field: FieldRef<A>, value: A, touched?: boolean) => void,
+        setFieldDisabled: <A>(field: FieldRef<A>, disabled: boolean) => void,
         setSubmitting: boolean => void,
         isSubmitting: boolean,
         isValid: boolean
