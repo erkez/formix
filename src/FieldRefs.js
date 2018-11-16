@@ -60,6 +60,7 @@ export function extractFieldValues<A: FieldRefType<any>>(
     if (fieldRef instanceof FieldRefImpl) {
         return fieldStates.get(fieldRef, fieldRef.initialState).value;
     } else if (fieldRef instanceof ArrayFieldRefImpl) {
+        // $FlowFixMe
         return fieldStates
             .get(fieldRef, fieldRef.initialState)
             .value.map(field => extractFieldValues(field, fieldStates))

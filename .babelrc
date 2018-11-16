@@ -1,7 +1,18 @@
 {
-    "presets": ["env", "flow", "react"],    
+    "presets": [
+        "@babel/env",
+        "@babel/flow",
+        "@babel/react"
+    ],
     "plugins": [
-        "transform-object-rest-spread",
-        "transform-class-properties"
+        [
+            "@babel/plugin-proposal-class-properties",
+            {
+                "loose": true
+            }
+        ]
+    ],
+    "only": [
+        "src"
     ]
 }

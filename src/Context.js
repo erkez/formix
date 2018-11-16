@@ -17,7 +17,9 @@ const ContextInitialValue: FormContextValue = {
     setFieldState: noop
 };
 
-const { Provider, Consumer } = React.createContext(ContextInitialValue);
+const { Provider, Consumer }: React.Context<FormContextValue> = React.createContext(
+    ContextInitialValue
+);
 
 export { Provider, Consumer };
 
