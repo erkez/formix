@@ -8,20 +8,18 @@ const noop = () => {
     throw new Error('Invalid call to empty context');
 };
 
-const ContextInitialValue: FormContextValue = {
+const Context: React.Context<FormContextValue> = React.createContext({
     fieldStates: Map(),
     formAccessors: {
         getFieldState: noop,
         getArrayFieldState: noop
     },
     setFieldState: noop
-};
+});
 
-const { Provider, Consumer }: React.Context<FormContextValue> = React.createContext(
-    ContextInitialValue
-);
+export default Context;
 
-export { Provider, Consumer };
+export const { Provider, Consumer } = Context;
 
 type Props = {
     children: FormAccessors => React.Node

@@ -716,6 +716,11 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
+"@ekz/option@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@ekz/option/-/option-1.2.0.tgz#f7baee5f38506d991101da92740ce41e8dd63704"
+  integrity sha512-t+IDVelJpBiGVyoMOb/R7sQh+G71VMK0Ld38ZyjZGTHXrPw0obzwyHmZVVl43U0k48a5K4VWcTYzRFbOlKXf4Q==
+
 "@octokit/rest@^15.2.6":
   version "15.17.0"
   resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-15.17.0.tgz#323a3f40f8ad8f271bd1354eaa3a50e7e5f62a90"
