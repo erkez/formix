@@ -1,0 +1,20 @@
+{
+    "plugins": [
+        "react",
+        "flowtype"
+    ],
+    "rules": {
+        "react/display-name": 0,
+        "react/prop-types": 0,
+        "no-console": 1
+    },
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true,
+        "jest": true
+    },
+    "extends": [
+        "../.eslintrc"
+    ]
+}
