@@ -91,16 +91,13 @@ class BoundField<A> extends React.PureComponent<BoundProps<A>> {
     render() {
         return (
             <Consumer>
-                {({ fieldStates, formAccessors, setFieldState }: FormContextValue) => {
-                    let fieldState: FieldState<A> = fieldStates.get(
-                        this.props.field,
-                        this.props.field.initialState
-                    );
+                {({ getFieldState, setFieldState }: FormContextValue) => {
+                    let fieldState: FieldState<A> = getFieldState(this.props.field);
 
                     let error = validateField(
                         fieldState.value,
                         this.props.validator,
-                        formAccessors
+                        getFieldState
                     );
 
                     return (

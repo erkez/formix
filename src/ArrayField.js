@@ -144,16 +144,13 @@ class BoundArrayField<A, T: FieldRefType<any>> extends React.PureComponent<Bound
     render() {
         return (
             <Consumer>
-                {({ fieldStates, setFieldState, formAccessors }: FormContextValue) => {
-                    let fieldState: ArrayFieldState<T> = fieldStates.get(
-                        this.props.field,
-                        this.props.field.initialState
-                    );
+                {({ getFieldState, setFieldState }: FormContextValue) => {
+                    let fieldState: ArrayFieldState<T> = getFieldState(this.props.field);
 
                     let error = validateField(
                         fieldState.value,
                         this.props.validator,
-                        formAccessors
+                        getFieldState
                     );
 
                     return (

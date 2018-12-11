@@ -7,15 +7,15 @@ import type { FieldValidator, FormAccessors } from './types';
 export function validateField<A>(
     value: A,
     validator?: FieldValidator<A>,
-    formAccessors: FormAccessors
+    getFieldState: $ElementType<FormAccessors, 'getFieldState'>
 ): Option<string> {
     return Option.of(validator).mapNullable(validator => {
         if (Array.isArray(validator)) {
             return Seq(validator)
-                .map(fn => fn(value, formAccessors))
+                .map(fn => fn(value, { getFieldState }))
                 .find(value => value != null, null);
         } else {
-            return validator(value, formAccessors);
+            return validator(value, { getFieldState });
         }
     });
 }

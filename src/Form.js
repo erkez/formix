@@ -3,12 +3,13 @@
 import * as React from 'react';
 import { Map } from 'immutable';
 import { Provider } from './Context';
-import { extractFieldValues } from './FieldRefs';
+import { extractFieldValues, getFieldRefMapping } from './FieldRefs';
 import type {
     FieldRefType,
+    FieldRef,
+    FieldState,
     FormBag,
     FormSubmitBag,
-    FormAccessors,
     FormContextValue
 } from './types';
 
@@ -30,6 +31,35 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
         resetOnInitialValueChange: false
     };
 
+    constructor(props: Props<A, T>) {
+        super(props);
+
+        this.getFieldState = this.getFieldState.bind(this);
+        this.setFieldState = this.setFieldState.bind(this);
+        this.setFieldValue = this.setFieldValue.bind(this);
+        this.setFieldDisabled = this.setFieldDisabled.bind(this);
+
+        this.state = {
+            context: {
+                fieldStates: Map(),
+                getFieldState: this.getFieldState,
+                setFieldState: this.setFieldState
+            },
+            formBag: Object.freeze({
+                fields: this.props.fieldsInitializer(this.props.initialValue),
+                getFieldState: this.getFieldState,
+                resetForm: this.resetForm,
+                handleSubmit: this.submitForm,
+                submitForm: this.submitForm,
+                setFieldValue: this.setFieldValue,
+                setFieldDisabled: this.setFieldDisabled,
+                setSubmitting: this.setSubmitting,
+                isSubmitting: false,
+                isValid: true
+            })
+        };
+    }
+
     componentDidUpdate(previousProps: Props<A, T>) {
         let fieldInitializerChanged =
             this.props.fieldsInitializer !== previousProps.fieldsInitializer;
@@ -41,19 +71,33 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
         }
     }
 
-    getFieldState: $ElementType<FormAccessors, 'getFieldState'> = fieldRef =>
-        // $FlowFixMe
-        this.state.context.fieldStates.get(fieldRef, fieldRef.initialState);
+    /*:: getFieldState: <A>(fieldRef: FieldRef<A>) => FieldState<A> */
+    getFieldState<A>(fieldRef: FieldRef<A>): FieldState<A> {
+        const { sourceRef, fromSource } = getFieldRefMapping<A>(fieldRef);
+        let fieldState = this.state.context.fieldStates.get(sourceRef, sourceRef.initialState);
+        return { ...fieldState, value: fromSource(fieldState.value) };
+    }
 
-    getArrayFieldState: $ElementType<FormAccessors, 'getArrayFieldState'> = fieldRef =>
-        // $FlowFixMe
-        this.state.context.fieldStates.get(fieldRef, fieldRef.initialState);
-
-    setFieldState: $ElementType<FormContextValue, 'setFieldState'> = (fieldRef, newState) => {
+    /*:: setFieldState: <A>(FieldRef<A>, $Shape<FieldState<A>>) => void */
+    setFieldState<A>(fieldRef: FieldRef<A>, newState: $Shape<FieldState<A>>): void {
         this.setState(s => {
+            const { sourceRef, toSource } = getFieldRefMapping<A>(fieldRef);
+
             let fieldStates = s.context.fieldStates.update(
-                fieldRef,
-                (previousState = fieldRef.initialState) => ({ ...previousState, ...newState })
+                sourceRef,
+                (previousState = sourceRef.initialState) => {
+                    let valueObj = {};
+
+                    if (newState.hasOwnProperty('value')) {
+                        valueObj = { value: toSource(newState.value) };
+                    }
+
+                    return {
+                        ...previousState,
+                        ...newState,
+                        ...valueObj
+                    };
+                }
             );
             let context = { ...s.context, fieldStates };
 
@@ -66,37 +110,20 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
 
             return { context, formBag };
         });
-    };
+    }
 
-    _updateField = (fieldRef, updateState) => {
-        this.setState(s => {
-            let fieldStates = s.context.fieldStates.update(
-                fieldRef,
-                // $FlowFixMe
-                (previousState = fieldRef.initialState) => updateState(previousState)
-            );
+    /*:: setFieldValue: <A>(fieldRef: FieldRef<A>, value: A, touched?: boolean) => void */
+    setFieldValue<A>(fieldRef: FieldRef<A>, value: A, touched?: boolean): void {
+        this.setFieldState(fieldRef, { value, touched });
+    }
 
-            let context = { ...s.context, fieldStates };
-
-            let formBag = s.formBag;
-            let isValid = fieldStates.every(state => state.error.isEmpty);
-
-            if (formBag.isValid !== isValid) {
-                formBag = updateFormBag(s.formBag, { isValid });
-            }
-
-            return { context, formBag };
-        });
-    };
-
-    _setFieldValue = (fieldRef, newValue, touched = true) =>
-        this._updateField(fieldRef, ps => ({ ...ps, value: newValue, touched }));
-
-    _setFieldDisabled = (fieldRef, disabled) =>
-        this._updateField(fieldRef, ps => ({ ...ps, disabled }));
+    /*:: setFieldDisabled: (fieldRef: FieldRef<any>, disabled: boolean) => void */
+    setFieldDisabled(fieldRef: FieldRef<any>, disabled: boolean): void {
+        this.setFieldState(fieldRef, { disabled });
+    }
 
     valuesToJS: () => any = () => {
-        return extractFieldValues(this.state.formBag.fields, this.state.context.fieldStates);
+        return extractFieldValues(this.state.formBag.fields, this.getFieldState);
     };
 
     resetForm: () => void = () => {
@@ -122,7 +149,6 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
         this.props.onSubmit({
             fields: this.state.formBag.fields,
             getFieldState: this.getFieldState,
-            getArrayFieldState: this.getArrayFieldState,
             valuesToJS: this.valuesToJS,
             resetForm: this.resetForm,
             submitForm: this.submitForm,
@@ -135,30 +161,6 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
             let formBag = updateFormBag(s.formBag, { isSubmitting });
             return { formBag };
         });
-    };
-
-    state: State<T> = {
-        context: {
-            formAccessors: {
-                getFieldState: this.getFieldState,
-                getArrayFieldState: this.getArrayFieldState
-            },
-            fieldStates: Map(),
-            setFieldState: this.setFieldState
-        },
-        formBag: Object.freeze({
-            fields: this.props.fieldsInitializer(this.props.initialValue),
-            getFieldState: this.getFieldState,
-            getArrayFieldState: this.getArrayFieldState,
-            resetForm: this.resetForm,
-            handleSubmit: this.submitForm,
-            submitForm: this.submitForm,
-            setFieldValue: this._setFieldValue,
-            setFieldDisabled: this._setFieldDisabled,
-            setSubmitting: this.setSubmitting,
-            isSubmitting: false,
-            isValid: true
-        })
     };
 
     render() {

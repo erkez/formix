@@ -7,3 +7,7 @@ export function submitPromise<T, R: Promise<any>>(form: FormSubmitBag<T>, promis
     promise.then(form.resetForm).catch(() => form.setSubmitting(false));
     return promise;
 }
+
+export function andThen<A, B, C>(ab: A => B, bc: B => C): A => C {
+    return a => bc(ab(a));
+}

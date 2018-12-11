@@ -1,6 +1,6 @@
 // @flow
 
-export { defineField, defineArrayField } from './FieldRefs';
+export { defineField, defineArrayField, mappedTo } from './FieldRefs';
 export { default as Form, withFormix } from './Form';
 export { default as Field } from './Field';
 export { default as ArrayField } from './ArrayField';

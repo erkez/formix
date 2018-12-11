@@ -7,5 +7,6 @@
     "files.trimTrailingWhitespace": true,
     "files.insertFinalNewline": true,
     "flow.useNPMPackagedFlow": true,
-    "typescript.quickSuggestionsForPaths": false
+    "typescript.quickSuggestionsForPaths": false,
+    "javascript.autoClosingTags": false
 }

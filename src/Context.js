@@ -10,10 +10,7 @@ const noop = () => {
 
 const Context: React.Context<FormContextValue> = React.createContext({
     fieldStates: Map(),
-    formAccessors: {
-        getFieldState: noop,
-        getArrayFieldState: noop
-    },
+    getFieldState: noop,
     setFieldState: noop
 });
 
@@ -26,7 +23,7 @@ type Props = {
 };
 
 export function WithFormAccessors(props: Props) {
-    return <Consumer>{({ formAccessors }) => props.children(formAccessors)}</Consumer>;
+    return <Consumer>{({ getFieldState }) => props.children({ getFieldState })}</Consumer>;
 }
 
 export function withFormAccessors<P: {}, WC: React.ComponentType<P>>(
