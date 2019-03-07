@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Map } from 'immutable';
-import { Provider } from './Context';
+import Context from './Context';
 import { extractFieldValues, getFieldRefMapping } from './FieldRefs';
 import type {
     FieldRefType,
@@ -165,9 +165,9 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
 
     render() {
         return (
-            <Provider value={this.state.context}>
+            <Context.Provider value={this.state.context}>
                 {this.props.children(this.state.formBag)}
-            </Provider>
+            </Context.Provider>
         );
     }
 }

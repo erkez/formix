@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Option, None } from '@ekz/option';
-import { Consumer } from './Context';
+import Context from './Context';
 import type { FieldRef, FieldState, FieldBag, FieldValidator, FormContextValue } from './types';
 import { validateField } from './validation';
 
@@ -90,7 +90,7 @@ type BoundProps<A> = {
 class BoundField<A> extends React.PureComponent<BoundProps<A>> {
     render() {
         return (
-            <Consumer>
+            <Context.Consumer>
                 {({ getFieldState, setFieldState }: FormContextValue) => {
                     let fieldState: FieldState<A> = getFieldState(this.props.field);
 
@@ -112,7 +112,7 @@ class BoundField<A> extends React.PureComponent<BoundProps<A>> {
                         </Field>
                     );
                 }}
-            </Consumer>
+            </Context.Consumer>
         );
     }
 }

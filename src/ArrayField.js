@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { List } from 'immutable';
 import { Option, None } from '@ekz/option';
-import { Consumer } from './Context';
+import Context from './Context';
 import type {
     FieldRefType,
     FieldValidator,
@@ -143,7 +143,7 @@ function checkBounds(items: List<any>, index: number): void {
 class BoundArrayField<A, T: FieldRefType<any>> extends React.PureComponent<BoundProps<A, T>> {
     render() {
         return (
-            <Consumer>
+            <Context.Consumer>
                 {({ getFieldState, setFieldState }: FormContextValue) => {
                     let fieldState: ArrayFieldState<T> = getFieldState(this.props.field);
 
@@ -163,7 +163,7 @@ class BoundArrayField<A, T: FieldRefType<any>> extends React.PureComponent<Bound
                         </ArrayField>
                     );
                 }}
-            </Consumer>
+            </Context.Consumer>
         );
     }
 }

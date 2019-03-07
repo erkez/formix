@@ -16,14 +16,16 @@ const Context: React.Context<FormContextValue> = React.createContext({
 
 export default Context;
 
-export const { Provider, Consumer } = Context;
-
 type Props = {
     children: FormAccessors => React.Node
 };
 
 export function WithFormAccessors(props: Props) {
-    return <Consumer>{({ getFieldState }) => props.children({ getFieldState })}</Consumer>;
+    return (
+        <Context.Consumer>
+            {({ getFieldState }) => props.children({ getFieldState })}
+        </Context.Consumer>
+    );
 }
 
 export function withFormAccessors<P: {}, WC: React.ComponentType<P>>(
