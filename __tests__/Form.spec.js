@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Form, FieldValue, defineField } from '../src';
-import { mount } from 'enzyme';
+import { render } from 'react-testing-library';
 
 describe('<Form />', () => {
     it('should be instantiated', () => {
@@ -12,7 +12,7 @@ describe('<Form />', () => {
 
         const handleSubmit = jest.fn();
 
-        const wrapper = mount(
+        const { getByText } = render(
             <Form fieldsInitializer={fields} initialValue="contents" onSubmit={handleSubmit}>
                 {({ fields }) => (
                     <FieldValue
@@ -23,6 +23,6 @@ describe('<Form />', () => {
             </Form>
         );
 
-        expect(wrapper.contains(<span className="my-value">contents</span>)).toEqual(true);
+        expect(getByText('contents')).toBeDefined();
     });
 });

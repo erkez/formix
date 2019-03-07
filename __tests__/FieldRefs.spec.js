@@ -1,10 +1,8 @@
 // @flow
 
-// import * as React from 'react';
 import { Option } from '@ekz/option';
 import { defineField, mappedTo, getFieldRefMapping } from '../src/FieldRefs';
 import type { FieldRef } from '../src/types';
-// import { mount } from 'enzyme';
 
 describe('FieldRefs', () => {
     describe('#getFieldRefMapping', () => {
