@@ -88,7 +88,7 @@ export type FormSubmitBag<T> = $ReadOnly<{|
     valuesToJS: () => any
 |}>;
 
-export type FormContextValue = $ReadOnly<{|
+export type FormStateContextValue = $ReadOnly<{|
     fieldStates: Map<FieldRef<any>, FieldState<any>>,
     ...FormAccessors,
     setFieldState: <A>(FieldRef<A>, $Shape<FieldState<A>>) => void

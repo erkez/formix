@@ -10,7 +10,7 @@ import type {
     ArrayFieldBag,
     ArrayFieldState,
     ArrayFieldRef,
-    FormContextValue
+    FormStateContextValue
 } from './types';
 import { validateField } from './validation';
 
@@ -144,7 +144,7 @@ class BoundArrayField<A, T: FieldRefType<any>> extends React.PureComponent<Bound
     render() {
         return (
             <Context.Consumer>
-                {({ getFieldState, setFieldState }: FormContextValue) => {
+                {({ getFieldState, setFieldState }: FormStateContextValue) => {
                     let fieldState: ArrayFieldState<T> = getFieldState(this.props.field);
 
                     let error = validateField(

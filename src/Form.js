@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Map } from 'immutable';
-import Context from './Context';
+import FormStateContext from './Context';
 import { extractFieldValues, getFieldRefMapping } from './FieldRefs';
 import type {
     FieldRefType,
@@ -10,7 +10,7 @@ import type {
     FieldState,
     FormBag,
     FormSubmitBag,
-    FormContextValue
+    FormStateContextValue
 } from './types';
 
 type Props<A, T: FieldRefType<any>> = {
@@ -18,11 +18,11 @@ type Props<A, T: FieldRefType<any>> = {
     initialValue: A,
     resetOnInitialValueChange: boolean,
     onSubmit: (FormSubmitBag<T>) => void,
-    children: (FormBag<T>) => React.Node
+    children: React.Node | ((FormBag<T>) => React.Node)
 };
 
 type State<T> = $Exact<{
-    context: FormContextValue,
+    context: FormStateContextValue,
     formBag: FormBag<T>
 }>;
 
@@ -165,9 +165,13 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
 
     render() {
         return (
-            <Context.Provider value={this.state.context}>
-                {this.props.children(this.state.formBag)}
-            </Context.Provider>
+            <FormStateContext.Provider value={this.state.context}>
+                <FormBagContext.Provider value={this.state.formBag}>
+                    {typeof this.props.children === 'function'
+                        ? this.props.children(this.state.formBag)
+                        : this.props.children}
+                </FormBagContext.Provider>
+            </FormStateContext.Provider>
         );
     }
 }
@@ -197,6 +201,27 @@ export function withFormix<A, P: {}, WC: React.ComponentType<P>, T: FieldRefType
             );
         };
     };
+}
+
+function noContext() {
+    throw new Error('No context defined! Did you forget <Form />?');
+}
+
+const FormBagContext = React.createContext<FormBag<any>>({
+    fields: null,
+    getFieldState: noContext,
+    resetForm: noContext,
+    handleSubmit: noContext,
+    submitForm: noContext,
+    setFieldValue: noContext,
+    setFieldDisabled: noContext,
+    setSubmitting: noContext,
+    isSubmitting: false,
+    isValid: false
+});
+
+export function useFormix<T>(): FormBag<T> {
+    return React.useContext(FormBagContext);
 }
 
 export default Form;

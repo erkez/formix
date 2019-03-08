@@ -3,7 +3,13 @@
 import * as React from 'react';
 import { Option, None } from '@ekz/option';
 import Context from './Context';
-import type { FieldRef, FieldState, FieldBag, FieldValidator, FormContextValue } from './types';
+import type {
+    FieldRef,
+    FieldState,
+    FieldBag,
+    FieldValidator,
+    FormStateContextValue
+} from './types';
 import { validateField } from './validation';
 
 type Props<A> = BoundProps<A> & {
@@ -91,7 +97,7 @@ class BoundField<A> extends React.PureComponent<BoundProps<A>> {
     render() {
         return (
             <Context.Consumer>
-                {({ getFieldState, setFieldState }: FormContextValue) => {
+                {({ getFieldState, setFieldState }: FormStateContextValue) => {
                     let fieldState: FieldState<A> = getFieldState(this.props.field);
 
                     let error = validateField(
