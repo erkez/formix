@@ -2,136 +2,105 @@
 
 import * as React from 'react';
 import { List } from 'immutable';
-import { Option, None } from '@ekz/option';
-import Context from './Context';
+import { None } from '@ekz/option';
+import { useFormState } from './Context';
 import type {
     FieldRefType,
     FieldValidator,
     ArrayFieldBag,
     ArrayFieldState,
-    ArrayFieldRef,
-    FormStateContextValue
+    ArrayFieldRef
 } from './types';
 import { validateField } from './validation';
 
-type Props<A, T> = BoundProps<A, T> & {
-    error: Option<string>,
-    fieldState: ArrayFieldState<T>,
-    setFieldState: (ArrayFieldRef<A, T>, $Shape<ArrayFieldState<T>>) => void
-};
-
-type State<A, T> = {
-    lastFieldState: ArrayFieldState<T>,
-    fieldBag: ArrayFieldBag<A, T>
-};
-
-class ArrayField<A, T: FieldRefType<any>> extends React.PureComponent<Props<A, T>, State<A, T>> {
-    state: State<A, T> = ArrayField.makeStateFromProps(this.props);
-
-    static getDerivedStateFromProps(
-        nextProps: Props<A, T>,
-        previousState: State<A, T>
-    ): ?State<A, T> {
-        if (nextProps.fieldState === previousState.lastFieldState) {
-            return null;
-        }
-
-        return ArrayField.makeStateFromProps(nextProps);
-    }
-
-    static makeStateFromProps(props: Props<A, T>): State<A, T> {
-        return {
-            lastFieldState: props.fieldState,
-            fieldBag: Object.freeze({
-                items: props.fieldState.value,
-                error: props.fieldState.error,
-                disabled: props.fieldState.disabled,
-                setDisabled: disabled => {
-                    props.setFieldState(props.field, { disabled });
-                },
-                map: fn => React.Children.toArray(props.fieldState.value.map(fn)),
-                move: (from, to) => {
-                    updateFieldState(props, items => {
-                        checkBounds(items, from);
-                        checkBounds(items, to);
-
-                        let item = items.get(from);
-
-                        if (item == null) {
-                            throw new Error('Invalid element access');
-                        }
-
-                        return items.remove(from).insert(to, item);
-                    });
-                },
-                swap: (indexA, indexB) => {
-                    updateFieldState(props, items => {
-                        let itemA = items.get(indexA);
-                        let itemB = items.get(indexB);
-
-                        if (itemA == null || itemB == null) {
-                            throw new Error('Invalid element access');
-                        }
-
-                        return items
-                            .remove(indexA)
-                            .insert(indexA, itemB)
-                            .remove(indexB)
-                            .insert(indexB, itemA);
-                    });
-                },
-                unshift: value => {
-                    updateFieldState(props, items => {
-                        return items.unshift(props.field.itemTemplate(value));
-                    });
-                },
-                push: value => {
-                    updateFieldState(props, items => {
-                        return items.push(props.field.itemTemplate(value));
-                    });
-                },
-                remove: item => {
-                    updateFieldState(props, items => items.filter(x => x !== item));
-                }
-            })
-        };
-    }
-
-    componentDidMount() {
-        this.performValidation();
-    }
-
-    componentDidUpdate(previousProps: Props<A, T>) {
-        if (this.props.error !== previousProps.error) {
-            this.performValidation();
-        }
-    }
-
-    componentWillUnmount() {
-        if (this.props.error.isDefined) {
-            this.props.setFieldState(this.props.field, { error: None });
-        }
-    }
-
-    performValidation(): void {
-        if (!this.props.error.equals(this.props.fieldState.error)) {
-            this.props.setFieldState(this.props.field, { error: this.props.error });
-        }
-    }
-
-    render() {
-        return this.props.children(this.state.fieldBag);
-    }
-}
-
-type BoundProps<A, T> = {
+type Props<A, T> = {
     field: ArrayFieldRef<A, T>,
     validator?: FieldValidator<List<T>>,
+    resetWhenUnmounted?: boolean,
     children: (ArrayFieldBag<A, T>) => React.Node
 };
 
-function updateFieldState<A, T>(props: Props<A, T>, updater: (List<T>) => List<T>): void {
-    props.setFieldState(props.field, { value: updater(props.fieldState.value) });
+export default function ArrayField<A, T: FieldRefType<any>>(props: Props<A, T>) {
+    const arrayField = useArrayField(props.field, props.validator, props.resetWhenUnmounted);
+    return props.children(arrayField);
+}
+
+export function useArrayField<A, T: FieldRefType<any>>(
+    field: ArrayFieldRef<A, T>,
+    validator?: FieldValidator<List<T>>,
+    resetWhenUnmounted?: boolean
+): ArrayFieldBag<A, T> {
+    const { getFieldState, setFieldState } = useFormState();
+    const fieldState: ArrayFieldState<T> = getFieldState(field);
+
+    const error = React.useMemo(() => validateField(fieldState.value, validator, getFieldState), [
+        fieldState.value,
+        validator,
+        getFieldState
+    ]);
+
+    // Validation
+    React.useEffect(() => {
+        setFieldState(field, { error });
+        return () => setFieldState(field, { error: None });
+    }, [field, error]);
+
+    // Value reset
+    React.useEffect(
+        () => () => {
+            if (resetWhenUnmounted === true) {
+                setFieldState(field, field.initialState);
+            }
+        },
+        [field, resetWhenUnmounted]
+    );
+
+    return React.useMemo(() => ({
+        items: fieldState.value,
+        error: fieldState.error,
+        disabled: fieldState.disabled,
+        setDisabled: disabled => {
+            setFieldState(field, { disabled });
+        },
+        map: fn => React.Children.toArray(fieldState.value.map(fn)),
+        move: (from, to) => {
+            checkBounds(fieldState.value, from);
+            checkBounds(fieldState.value, to);
+
+            let item = fieldState.value.get(from);
+
+            if (item == null) {
+                throw new Error('Invalid element access');
+            }
+
+            setFieldState(field, { value: fieldState.value.remove(from).insert(to, item) });
+        },
+        swap: (indexA, indexB) => {
+            let itemA = fieldState.value.get(indexA);
+            let itemB = fieldState.value.get(indexB);
+
+            if (itemA == null || itemB == null) {
+                throw new Error('Invalid element access');
+            }
+
+            setFieldState(field, {
+                value: fieldState.value
+                    .remove(indexA)
+                    .insert(indexA, itemB)
+                    .remove(indexB)
+                    .insert(indexB, itemA)
+            });
+        },
+        unshift: value => {
+            setFieldState(field, { value: fieldState.value.unshift(field.itemTemplate(value)) });
+        },
+        push: value => {
+            setFieldState(field, { value: fieldState.value.push(field.itemTemplate(value)) });
+        },
+        remove: item => {
+            setFieldState(field, { value: fieldState.value.filter(x => x !== item) });
+        }
+    }));
 }
 
 function checkBounds(items: List<any>, index: number): void {
@@ -139,33 +108,3 @@ function checkBounds(items: List<any>, index: number): void {
         throw new Error(`Index out of bounds, got ${index}`);
     }
 }
-
-class BoundArrayField<A, T: FieldRefType<any>> extends React.PureComponent<BoundProps<A, T>> {
-    render() {
-        return (
-            <Context.Consumer>
-                {({ getFieldState, setFieldState }: FormStateContextValue) => {
-                    let fieldState: ArrayFieldState<T> = getFieldState(this.props.field);
-
-                    let error = validateField(
-                        fieldState.value,
-                        this.props.validator,
-                        getFieldState
-                    );
-
-                    return (
-                        <ArrayField
-                            field={this.props.field}
-                            fieldState={fieldState}
-                            error={error}
-                            setFieldState={setFieldState}>
-                            {this.props.children}
-                        </ArrayField>
-                    );
-                }}
-            </Context.Consumer>
-        );
-    }
-}
-
-export default BoundArrayField;
