@@ -39,3 +39,7 @@ export function withFormAccessors<P: {}, WC: React.ComponentType<P>>(
         );
     };
 }
+
+export function useFormState(): FormStateContextValue {
+    return React.useContext(Context);
+}

@@ -30,9 +30,6 @@
     "LICENSE"
   ],
   "jest": {
-    "testPathIgnorePatterns": [
-      "__tests__/test.setup.js"
-    ],
     "setupFilesAfterEnv": [
       "react-testing-library/cleanup-after-each"
     ]
@@ -48,11 +45,11 @@
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
     "@babel/plugin-proposal-class-properties": "^7.3.4",
+    "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.4",
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@ekz/option": "^1.2.1",
-    "babel-core": "^7.0.0-bridge",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.3.0",
     "documentation": "^9.3.0",
@@ -77,8 +74,5 @@
     "lint": "eslint src",
     "build": "yarn lint && babel src/ -d lib/ && flow-copy-source -v src lib",
     "prepublish": "yarn run build"
-  },
-  "resolutions": {
-    "babel-core": "7.0.0-bridge.0"
   }
 }
