@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { List } from 'immutable';
-import { None } from '@ekz/option';
+import { Option, None } from '@ekz/option';
 import { useFormState } from './Context';
 import type {
     FieldRefType,
@@ -41,9 +41,11 @@ export function useArrayField<A, T: FieldRefType<any>>(
 
     // Validation
     React.useEffect(() => {
-        setFieldState(field, { error });
-        return () => setFieldState(field, { error: None });
-    }, [field, error]);
+        if (validator != null) {
+            setFieldState(field, { error: Option.of(error) });
+            return () => setFieldState(field, { error: None });
+        }
+    }, [field, validator, error]);
 
     // Value reset
     React.useEffect(

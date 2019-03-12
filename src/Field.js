@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import { None } from '@ekz/option';
+import { None, Option } from '@ekz/option';
 import { useFormState } from './Context';
 import type { FieldRef, FieldState, FieldBag, FieldValidator } from './types';
 import { validateField } from './validation';
@@ -34,9 +34,11 @@ export function useField<T>(
 
     // Validation
     React.useEffect(() => {
-        setFieldState(field, { error });
-        return () => setFieldState(field, { error: None });
-    }, [field, error]);
+        if (validator != null) {
+            setFieldState(field, { error: Option.of(error) });
+            return () => setFieldState(field, { error: None });
+        }
+    }, [field, validator, error]);
 
     // Value reset
     React.useEffect(
