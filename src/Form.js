@@ -36,8 +36,6 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
 
         this.getFieldState = this.getFieldState.bind(this);
         this.setFieldState = this.setFieldState.bind(this);
-        this.setFieldValue = this.setFieldValue.bind(this);
-        this.setFieldDisabled = this.setFieldDisabled.bind(this);
 
         this.state = {
             context: {
@@ -47,12 +45,9 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
             },
             formBag: Object.freeze({
                 fields: this.props.fieldsInitializer(this.props.initialValue),
-                getFieldState: this.getFieldState,
                 resetForm: this.resetForm,
                 handleSubmit: this.submitForm,
                 submitForm: this.submitForm,
-                setFieldValue: this.setFieldValue,
-                setFieldDisabled: this.setFieldDisabled,
                 setSubmitting: this.setSubmitting,
                 isSubmitting: false,
                 isValid: true
@@ -110,16 +105,6 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
 
             return { context, formBag };
         });
-    }
-
-    /*:: setFieldValue: <A>(fieldRef: FieldRef<A>, value: A, touched?: boolean) => void */
-    setFieldValue<A>(fieldRef: FieldRef<A>, value: A, touched?: boolean): void {
-        this.setFieldState(fieldRef, { value, touched });
-    }
-
-    /*:: setFieldDisabled: (fieldRef: FieldRef<any>, disabled: boolean) => void */
-    setFieldDisabled(fieldRef: FieldRef<any>, disabled: boolean): void {
-        this.setFieldState(fieldRef, { disabled });
     }
 
     valuesToJS: () => any = () => {
@@ -209,12 +194,9 @@ function noContext() {
 
 const FormBagContext = React.createContext<FormBag<any>>({
     fields: null,
-    getFieldState: noContext,
     resetForm: noContext,
     handleSubmit: noContext,
     submitForm: noContext,
-    setFieldValue: noContext,
-    setFieldDisabled: noContext,
     setSubmitting: noContext,
     isSubmitting: false,
     isValid: false

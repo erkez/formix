@@ -6,8 +6,7 @@ export { default as Field, useField } from './Field';
 export { default as ArrayField, useArrayField } from './ArrayField';
 export { default as FieldValue } from './FieldValue';
 export { default as OnChange } from './OnChange';
-export { WithFormAccessors, withFormAccessors } from './Context';
-export { useFieldState, useFieldValue } from './hooks';
+export { useFieldValue } from './hooks';
 
 import * as helpers from './helpers';
 export { helpers };
@@ -21,7 +20,6 @@ export type {
     Validator,
     FieldValidator,
     ArrayFieldValidator,
-    FormAccessors,
     FormSubmitBag,
     FormBag
 } from './types';

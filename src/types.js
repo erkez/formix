@@ -35,7 +35,7 @@ export type FieldState<A> = {|
 
 export type ArrayFieldState<A> = FieldState<List<A>>;
 
-export type Validator<A> = (value: A, context: FormAccessors) => ?string;
+export type Validator<A> = (value: A, context: FormAccessor) => ?string;
 
 export type FieldValidator<A> = Validator<A> | Array<Validator<A>>;
 
@@ -62,25 +62,22 @@ export type ArrayFieldBag<A, T: FieldRefType<any>> = $ReadOnly<{|
     remove: (item: T) => void
 |}>;
 
-export type FormAccessors = $ReadOnly<{|
-    getFieldState: <A>(FieldRef<A>) => FieldState<A>
-|}>;
-
 export type FormBag<T> = $ReadOnly<{|
-    ...FormAccessors,
     fields: T,
     resetForm: () => void,
     handleSubmit: (e: SyntheticEvent<HTMLFormElement>) => void,
     submitForm: () => void,
-    setFieldValue: <A>(field: FieldRef<A>, value: A, touched?: boolean) => void,
-    setFieldDisabled: <A>(field: FieldRef<A>, disabled: boolean) => void,
     setSubmitting: boolean => void,
     isSubmitting: boolean,
     isValid: boolean
 |}>;
 
+type FormAccessor = $ReadOnly<{|
+    getFieldState: <A>(FieldRef<A>) => FieldState<A>
+|}>;
+
 export type FormSubmitBag<T> = $ReadOnly<{|
-    ...FormAccessors,
+    ...FormAccessor,
     fields: T,
     resetForm: () => void,
     submitForm: () => void,
@@ -90,6 +87,6 @@ export type FormSubmitBag<T> = $ReadOnly<{|
 
 export type FormStateContextValue = $ReadOnly<{|
     fieldStates: Map<FieldRef<any>, FieldState<any>>,
-    ...FormAccessors,
+    ...FormAccessor,
     setFieldState: <A>(FieldRef<A>, $Shape<FieldState<A>>) => void
 |}>;

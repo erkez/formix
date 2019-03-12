@@ -23,11 +23,11 @@ export function useField<T>(
     validator?: FieldValidator<T>,
     resetWhenUnmounted?: boolean
 ): FieldBag<T> {
-    const { getFieldState, setFieldState } = useFormState();
+    const { fieldStates, getFieldState, setFieldState } = useFormState();
     const fieldState: FieldState<T> = getFieldState(field);
 
     const error = React.useMemo(() => validateField(fieldState.value, validator, getFieldState), [
-        fieldState.value,
+        fieldStates,
         validator,
         getFieldState
     ]);

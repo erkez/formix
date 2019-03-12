@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import type { FieldRef } from './types';
-import Field from './Field';
+import { useField } from './Field';
 
 type Props<T> = {|
     field: FieldRef<T>,
@@ -10,11 +10,8 @@ type Props<T> = {|
 |};
 
 function FieldValue<T>(props: Props<T>) {
-    return (
-        <Field field={props.field}>
-            {({ value }) => (props.render != null ? props.render(value) : tryRender(value))}
-        </Field>
-    );
+    const field = useField(props.field);
+    return props.render != null ? props.render(field.value) : tryRender(field.value);
 }
 
 function tryRender<T>(value: T): React.Node {

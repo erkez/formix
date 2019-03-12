@@ -30,11 +30,11 @@ export function useArrayField<A, T: FieldRefType<any>>(
     validator?: FieldValidator<List<T>>,
     resetWhenUnmounted?: boolean
 ): ArrayFieldBag<A, T> {
-    const { getFieldState, setFieldState } = useFormState();
+    const { fieldStates, getFieldState, setFieldState } = useFormState();
     const fieldState: ArrayFieldState<T> = getFieldState(field);
 
     const error = React.useMemo(() => validateField(fieldState.value, validator, getFieldState), [
-        fieldState.value,
+        fieldStates,
         validator,
         getFieldState
     ]);

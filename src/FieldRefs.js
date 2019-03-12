@@ -9,8 +9,7 @@ import type {
     MappedRef,
     ArrayFieldRef,
     FieldState,
-    ArrayFieldState,
-    FormAccessors
+    ArrayFieldState
 } from './types';
 
 class FieldRefImpl<A> implements FieldRef<A> {
@@ -67,7 +66,7 @@ export function defineArrayField<A, T: FieldRefType<any>>(
 
 export function extractFieldValues<A: FieldRefType<any>>(
     fieldRef: A,
-    getFieldState: $ElementType<FormAccessors, 'getFieldState'>
+    getFieldState: <A>(FieldRef<A>) => FieldState<A>
 ) {
     if (fieldRef instanceof FieldRefImpl) {
         return getFieldState(fieldRef).value;

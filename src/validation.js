@@ -2,12 +2,12 @@
 
 import { Seq } from 'immutable';
 import { Option } from '@ekz/option';
-import type { FieldValidator, FormAccessors } from './types';
+import type { FieldValidator, FieldRef, FieldState } from './types';
 
 export function validateField<A>(
     value: A,
     validator?: FieldValidator<A>,
-    getFieldState: $ElementType<FormAccessors, 'getFieldState'>
+    getFieldState: <A>(FieldRef<A>) => FieldState<A>
 ): Option<string> {
     return Option.of(validator).mapNullable(validator => {
         if (Array.isArray(validator)) {
