@@ -19,7 +19,8 @@ function tryRender<T>(value: T): React.Node {
         return (value: any);
     }
 
-    return typeof value === 'string' || typeof value === 'number' ? value : JSON.stringify(value);
+    let result = JSON.stringify(value);
+    return result == null ? null : result;
 }
 
 export default FieldValue;
