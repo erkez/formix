@@ -716,10 +716,10 @@
     lodash "^4.17.10"
     to-fast-properties "^2.0.0"
 
-"@ekz/option@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@ekz/option/-/option-1.2.0.tgz#f7baee5f38506d991101da92740ce41e8dd63704"
-  integrity sha512-t+IDVelJpBiGVyoMOb/R7sQh+G71VMK0Ld38ZyjZGTHXrPw0obzwyHmZVVl43U0k48a5K4VWcTYzRFbOlKXf4Q==
+"@ekz/option@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@ekz/option/-/option-1.2.1.tgz#6fc5ab5b6915577d3ce847d3b495587734c4f518"
+  integrity sha512-FK/gLPCrvBV/fkPvTdgKh7lV6YnTaDUuQYMRKSs5F3KtqR2yCEJMnyQs9Z+/MpEIfau0s3qI9NLS9bXlhf3g7Q==
 
 "@octokit/rest@^15.2.6":
   version "15.17.0"
@@ -3278,10 +3278,10 @@ flat-cache@^1.2.1:
     graceful-fs "^4.1.2"
     write "^0.2.1"
 
-flow-bin@^0.86.0:
-  version "0.86.0"
-  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.86.0.tgz#153a28722b4dc13b7200c74b644dd4d9f4969a11"
-  integrity sha512-ulRvFH3ewGIYwg+qPk/OJXoe3Nhqi0RyR0wqgK0b1NzUDEC6O99zU39MBTickXvlrr6iwRO6Wm4lVGeDmnzbew==
+flow-bin@^0.95.1:
+  version "0.95.1"
+  resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.95.1.tgz#633113831ccff4b7ee70a2730f63fc43b69ba85f"
+  integrity sha512-06IOC/pqPMNRYtC6AMZEWYR9Fi6UdBC7gImGinPuNUpPZFnP5E9/0cBCl3DWrH4zz/gSM2HdDilU7vPGpYIr2w==
 
 flow-copy-source@^2.0.2:
   version "2.0.2"
