@@ -57,8 +57,8 @@ export type ArrayFieldBag<A, T: FieldRefType<any>> = $ReadOnly<{|
     map: (mapper: (item: T, index?: number) => Node) => Node,
     swap: (indexA: number, indexB: number) => void,
     move: (from: number, to: number) => void,
-    unshift: (value: A) => void,
-    push: (value: A) => void,
+    unshift: (value: A) => T,
+    push: (value: A) => T,
     remove: (item: T) => void
 |}>;
 

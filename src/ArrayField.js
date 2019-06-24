@@ -94,10 +94,14 @@ export function useArrayField<A, T: FieldRefType<any>>(
             });
         },
         unshift: value => {
-            setFieldState(field, { value: fieldState.value.unshift(field.itemTemplate(value)) });
+            let item = field.itemTemplate(value);
+            setFieldState(field, { value: fieldState.value.unshift(item) });
+            return item;
         },
         push: value => {
-            setFieldState(field, { value: fieldState.value.push(field.itemTemplate(value)) });
+            let item = field.itemTemplate(value);
+            setFieldState(field, { value: fieldState.value.push(item) });
+            return item;
         },
         remove: item => {
             setFieldState(field, { value: fieldState.value.filter(x => x !== item) });
