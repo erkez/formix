@@ -42,8 +42,13 @@ export function useArrayField<A, T: FieldRefType<any>>(
     // Validation
     React.useEffect(() => {
         if (validator != null) {
-            setFieldState(field, { error: Option.of(error) });
-            return () => setFieldState(field, { error: None });
+            setFieldState(field, {
+                error: Option.of(error)
+            });
+            return () =>
+                setFieldState(field, {
+                    error: None
+                });
         }
     }, [field, validator, error]);
 
@@ -57,56 +62,69 @@ export function useArrayField<A, T: FieldRefType<any>>(
         [field, resetWhenUnmounted]
     );
 
-    return React.useMemo(() => ({
-        items: fieldState.value,
-        error: fieldState.error,
-        disabled: fieldState.disabled,
-        setDisabled: disabled => {
-            setFieldState(field, { disabled });
-        },
-        map: fn => React.Children.toArray(fieldState.value.map(fn)),
-        move: (from, to) => {
-            checkBounds(fieldState.value, from);
-            checkBounds(fieldState.value, to);
+    return React.useMemo(
+        () => ({
+            items: fieldState.value,
+            error: fieldState.error,
+            disabled: fieldState.disabled,
+            setDisabled: disabled => {
+                setFieldState(field, {
+                    disabled
+                });
+            },
+            map: fn => React.Children.toArray(fieldState.value.map(fn)),
+            move: (from, to) => {
+                checkBounds(fieldState.value, from);
+                checkBounds(fieldState.value, to);
 
-            let item = fieldState.value.get(from);
+                let item = fieldState.value.get(from);
 
-            if (item == null) {
-                throw new Error('Invalid element access');
+                if (item == null) {
+                    throw new Error('Invalid element access');
+                }
+
+                setFieldState(field, {
+                    value: fieldState.value.remove(from).insert(to, item)
+                });
+            },
+            swap: (indexA, indexB) => {
+                let itemA = fieldState.value.get(indexA);
+                let itemB = fieldState.value.get(indexB);
+
+                if (itemA == null || itemB == null) {
+                    throw new Error('Invalid element access');
+                }
+
+                setFieldState(field, {
+                    value: fieldState.value
+                        .remove(indexA)
+                        .insert(indexA, itemB)
+                        .remove(indexB)
+                        .insert(indexB, itemA)
+                });
+            },
+            unshift: value => {
+                let item = field.itemTemplate(value);
+                setFieldState(field, {
+                    value: fieldState.value.unshift(item)
+                });
+                return item;
+            },
+            push: value => {
+                let item = field.itemTemplate(value);
+                setFieldState(field, {
+                    value: fieldState.value.push(item)
+                });
+                return item;
+            },
+            remove: item => {
+                setFieldState(field, {
+                    value: fieldState.value.filter(x => x !== item)
+                });
             }
-
-            setFieldState(field, { value: fieldState.value.remove(from).insert(to, item) });
-        },
-        swap: (indexA, indexB) => {
-            let itemA = fieldState.value.get(indexA);
-            let itemB = fieldState.value.get(indexB);
-
-            if (itemA == null || itemB == null) {
-                throw new Error('Invalid element access');
-            }
-
-            setFieldState(field, {
-                value: fieldState.value
-                    .remove(indexA)
-                    .insert(indexA, itemB)
-                    .remove(indexB)
-                    .insert(indexB, itemA)
-            });
-        },
-        unshift: value => {
-            let item = field.itemTemplate(value);
-            setFieldState(field, { value: fieldState.value.unshift(item) });
-            return item;
-        },
-        push: value => {
-            let item = field.itemTemplate(value);
-            setFieldState(field, { value: fieldState.value.push(item) });
-            return item;
-        },
-        remove: item => {
-            setFieldState(field, { value: fieldState.value.filter(x => x !== item) });
-        }
-    }));
+        }),
+        [field, setFieldState, fieldState.value, fieldState.error, fieldState.disabled]
+    );
 }
 
 function checkBounds(items: List<any>, index: number): void {

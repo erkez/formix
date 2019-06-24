@@ -54,7 +54,7 @@ export type ArrayFieldBag<A, T: FieldRefType<any>> = $ReadOnly<{|
     error: Option<string>,
     disabled: boolean,
     setDisabled: boolean => void,
-    map: (mapper: (item: T, index?: number) => Node) => Node,
+    map: (mapper: (item: T, index: number) => Node) => Node,
     swap: (indexA: number, indexB: number) => void,
     move: (from: number, to: number) => void,
     unshift: (value: A) => T,
