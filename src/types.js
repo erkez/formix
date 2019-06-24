@@ -59,6 +59,8 @@ export type ArrayFieldBag<A, T: FieldRefType<any>> = $ReadOnly<{|
     move: (from: number, to: number) => void,
     unshift: (value: A) => T,
     push: (value: A) => T,
+    insert: (index: number, value: A) => T,
+    insertItem: (index: number, item: T) => void,
     remove: (item: T) => void
 |}>;
 

@@ -117,6 +117,18 @@ export function useArrayField<A, T: FieldRefType<any>>(
                 });
                 return item;
             },
+            insert: (index, value) => {
+                let item = field.itemTemplate(value);
+                setFieldState(field, {
+                    value: fieldState.value.insert(index, item)
+                });
+                return item;
+            },
+            insertItem: (index, item) => {
+                setFieldState(field, {
+                    value: fieldState.value.insert(index, item)
+                });
+            },
             remove: item => {
                 setFieldState(field, {
                     value: fieldState.value.filter(x => x !== item)
