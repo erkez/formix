@@ -45,6 +45,7 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
             },
             formBag: Object.freeze({
                 fields: this.props.fieldsInitializer(this.props.initialValue),
+                getFieldState: this.getFieldState,
                 resetForm: this.resetForm,
                 handleSubmit: this.submitForm,
                 submitForm: this.submitForm,
@@ -194,6 +195,7 @@ function noContext() {
 
 const FormBagContext = React.createContext<FormBag<any>>({
     fields: null,
+    getFieldState: noContext,
     resetForm: noContext,
     handleSubmit: noContext,
     submitForm: noContext,

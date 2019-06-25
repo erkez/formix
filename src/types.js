@@ -65,6 +65,7 @@ export type ArrayFieldBag<A, T: FieldRefType<any>> = $ReadOnly<{|
 |}>;
 
 export type FormBag<T> = $ReadOnly<{|
+    ...FormAccessor,
     fields: T,
     resetForm: () => void,
     handleSubmit: (e: SyntheticEvent<HTMLFormElement>) => void,
