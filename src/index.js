@@ -20,6 +20,7 @@ export type {
     Validator,
     FieldValidator,
     ArrayFieldValidator,
+    FormStateCheckpoint,
     FormSubmitBag,
     FormBag
 } from './types';

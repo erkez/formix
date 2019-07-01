@@ -4,10 +4,12 @@ import * as React from 'react';
 import { Map } from 'immutable';
 import FormStateContext from './Context';
 import { extractFieldValues, getFieldRefMapping } from './FieldRefs';
+import { createFormState } from './FormState';
 import type {
     FieldRefType,
     FieldRef,
     FieldState,
+    FormStateCheckpoint,
     FormBag,
     FormSubmitBag,
     FormStateContextValue
@@ -46,6 +48,8 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
             formBag: Object.freeze({
                 fields: this.props.fieldsInitializer(this.props.initialValue),
                 getFieldState: this.getFieldState,
+                persistFormState: this.persistFormState,
+                restoreFormState: this.restoreFormState,
                 resetForm: this.resetForm,
                 handleSubmit: this.submitForm,
                 submitForm: this.submitForm,
@@ -107,6 +111,22 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
             return { context, formBag };
         });
     }
+
+    persistFormState = (): Promise<FormStateCheckpoint> =>
+        new Promise(resolve =>
+            this.setState(s => {
+                resolve(createFormState(s.formBag.fields, s.context.fieldStates));
+                return null;
+            })
+        );
+
+    restoreFormState = (checkpoint: FormStateCheckpoint) => {
+        this.setState(s => {
+            let context = { ...s.context, fieldStates: checkpoint.formState.fieldStates };
+            let formBag = { ...s.formBag, fields: checkpoint.formState.fields };
+            return { context, formBag };
+        });
+    };
 
     valuesToJS: () => any = () => {
         return extractFieldValues(this.state.formBag.fields, this.getFieldState);
@@ -196,6 +216,8 @@ function noContext() {
 const FormBagContext = React.createContext<FormBag<any>>({
     fields: null,
     getFieldState: noContext,
+    persistFormState: noContext,
+    restoreFormState: noContext,
     resetForm: noContext,
     handleSubmit: noContext,
     submitForm: noContext,

@@ -67,6 +67,8 @@ export type ArrayFieldBag<A, T: FieldRefType<any>> = $ReadOnly<{|
 export type FormBag<T> = $ReadOnly<{|
     ...FormAccessor,
     fields: T,
+    persistFormState: () => Promise<FormStateCheckpoint>,
+    restoreFormState: FormStateCheckpoint => void,
     resetForm: () => void,
     handleSubmit: (e: SyntheticEvent<HTMLFormElement>) => void,
     submitForm: () => void,
@@ -86,6 +88,16 @@ export type FormSubmitBag<T> = $ReadOnly<{|
     submitForm: () => void,
     setSubmitting: boolean => void,
     valuesToJS: () => any
+|}>;
+
+export type FormState<T: FieldRefType<any>> = {|
+    fields: T,
+    fieldStates: Map<FieldRef<any>, FieldState<any>>
+|};
+
+export type FormStateCheckpoint = $ReadOnly<{|
+    formState: FormState<any>,
+    equals: (otherCheckpoint: FormStateCheckpoint) => boolean
 |}>;
 
 export type FormStateContextValue = $ReadOnly<{|
