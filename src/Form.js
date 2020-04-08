@@ -185,7 +185,7 @@ function updateFormBag<T>(bag: FormBag<T>, obj: $Shape<FormBag<T>>): FormBag<T> 
     return Object.freeze({ ...bag, ...obj });
 }
 
-export function withFormix<A, P: {}, WC: React.ComponentType<P>, T: FieldRefType<any>>({
+export function withFormix<A, P: { ... }, WC: React.ComponentType<P>, T: FieldRefType<any>>({
     fieldsInitializer,
     mapPropsToInitialValue,
     mapPropsToSubmit
