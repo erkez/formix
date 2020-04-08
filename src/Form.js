@@ -36,8 +36,9 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
     constructor(props: Props<A, T>) {
         super(props);
 
-        this.getFieldState = this.getFieldState.bind(this);
-        this.setFieldState = this.setFieldState.bind(this);
+        const that: any = this;
+        that.getFieldState = this.getFieldState.bind(this);
+        that.setFieldState = this.setFieldState.bind(this);
 
         this.state = {
             context: {
@@ -86,16 +87,14 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
             let fieldStates = s.context.fieldStates.update(
                 sourceRef,
                 (previousState = sourceRef.initialState) => {
-                    let valueObj = {};
-
-                    if (newState.hasOwnProperty('value')) {
-                        valueObj = { value: toSource(newState.value) };
-                    }
-
                     return {
                         ...previousState,
                         ...newState,
-                        ...valueObj
+                        ...{
+                            value: newState.hasOwnProperty('value')
+                                ? toSource(newState.value)
+                                : undefined
+                        }
                     };
                 }
             );
@@ -182,7 +181,7 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
     }
 }
 
-function updateFormBag<T>(bag: FormBag<T>, obj: {}): FormBag<T> {
+function updateFormBag<T>(bag: FormBag<T>, obj: $Shape<FormBag<T>>): FormBag<T> {
     return Object.freeze({ ...bag, ...obj });
 }
 
