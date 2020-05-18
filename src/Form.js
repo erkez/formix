@@ -87,14 +87,16 @@ class Form<A, T: FieldRefType<any>> extends React.Component<Props<A, T>, State<T
             let fieldStates = s.context.fieldStates.update(
                 sourceRef,
                 (previousState = sourceRef.initialState) => {
+                    let valueObj: {| value?: A |};
+
+                    if (newState.hasOwnProperty('value')) {
+                        valueObj = { value: toSource(newState.value) };
+                    }
+
                     return {
                         ...previousState,
                         ...newState,
-                        ...{
-                            value: newState.hasOwnProperty('value')
-                                ? toSource(newState.value)
-                                : undefined
-                        }
+                        ...valueObj
                     };
                 }
             );
