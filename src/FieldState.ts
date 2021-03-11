@@ -8,7 +8,12 @@ export default class FieldState<T> implements IFieldState<T> {
         public readonly disabled: boolean,
         public readonly active: boolean,
         public readonly touched: boolean
-    ) {}
+    ) {
+        this.value = value;
+        this.disabled = disabled;
+        this.active = active;
+        this.touched = touched;
+    }
 
     updated(fields: Partial<FieldValue<T> & FieldMetadata>): FieldState<T> {
         const o = { value: this.value, ...fields };
