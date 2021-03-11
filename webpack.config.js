@@ -9,5 +9,10 @@ module.exports = Packer.webpack.createLibraryConfiguration('Formix', {
     output: {
         path: 'lib',
         publicPath: '/'
+    },
+    externals: {
+        react: 'react',
+        immutable: 'immutable',
+        '@ekz/option': '@ekz/option'
     }
 });
