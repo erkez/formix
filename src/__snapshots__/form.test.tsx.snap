@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`form should render a FormProvider and extract the form API 1`] = `
+<div>
+  <div>
+    <div>
+      valid: 
+      YES
+    </div>
+    <div>
+      pending: 
+      NO
+    </div>
+    <div>
+      modified: 
+      NO
+    </div>
+  </div>
+</div>
+`;
+
+exports[`form should render an empty FormProvider 1`] = `
+<div>
+  <form
+    class="some-form"
+  />
+</div>
+`;

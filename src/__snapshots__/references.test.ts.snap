@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`references ArrayFieldRef should define ArrayFieldRef 1`] = `
+Immutable.List [
+  Object {
+    "name": FieldRefImpl {
+      "initialState": FieldState {
+        "active": false,
+        "disabled": false,
+        "touched": false,
+        "value": "fizz",
+      },
+      "initialValue": "fizz",
+    },
+  },
+]
+`;
+
+exports[`references FieldRef should define FieldRef 1`] = `
+FieldState {
+  "active": false,
+  "disabled": false,
+  "touched": false,
+  "value": "fizz",
+}
+`;

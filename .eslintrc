@@ -1,44 +1,19 @@
 {
-    "parser": "babel-eslint",
-    "plugins": [
-        "prettier",
-        "react",
-        "flowtype"
+    "extends": [
+        "@ekz/packer/recommended",
+        "@ekz/packer/typescript"
     ],
     "rules": {
-        "prettier/prettier": [
-            "error",
+        "@typescript-eslint/explicit-function-return-type": [
+            "warn",
             {
-                "printWidth": 100,
-                "singleQuote": true,
-                "trailingComma": "none",
-                "bracketSpacing": true,
-                "jsxBracketSameLine": true,
-                "tabWidth": 4,
-                "parser": "babel"
+                "allowExpressions": true,
+                "allowTypedFunctionExpressions": true
             }
         ],
-        "no-prototype-builtins": 0,
-        "eqeqeq": [
-            2,
-            "allow-null"
-        ]
+        "@typescript-eslint/no-use-before-define": "off"
     },
     "env": {
-        "es6": true,
-        "node": true,
-        "browser": true
-    },
-    "parserOptions": {
-        "sourceType": "module"
-    },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:flowtype/recommended",
-        "prettier",
-        "prettier/flowtype",
-        "prettier/react",
-        "prettier/standard"
-    ]
+        "jest": true
+    }
 }

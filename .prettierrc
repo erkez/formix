@@ -1,0 +1,7 @@
+{
+    "importOrder": [
+        "^@root",
+        "^[./]"
+    ],
+    "importOrderSeparation": true
+}

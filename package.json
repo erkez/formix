@@ -1,12 +1,12 @@
 {
   "name": "@ekz/formix",
-  "version": "0.5.0-rc.14",
-  "description": "Type-safe React form to be used with Flow",
+  "version": "1.0.0-beta.1",
+  "description": "Type-safe React form to be used with Typescript",
   "keywords": [
     "react",
     "form",
     "formix",
-    "flow",
+    "typescript",
     "type-safe"
   ],
   "author": {
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/erkez/formix#readme",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "license": "MIT",
   "private": false,
   "files": [
@@ -29,49 +30,36 @@
     "README.md",
     "LICENSE"
   ],
-  "jest": {
-    "setupFilesAfterEnv": [
-      "react-testing-library/cleanup-after-each"
-    ]
-  },
   "peerDependencies": {
     "@ekz/option": "^1.2.1",
-    "immutable": "^4.0.0-rc.9",
-    "react": "^16.8.0"
+    "immutable": "^4.0.0-rc.12",
+    "react": "^16.8.0 || ^17",
+    "typescript": "^4"
   },
   "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.4.5",
-    "@babel/plugin-proposal-class-properties": "^7.4.4",
-    "@babel/polyfill": "^7.4.4",
-    "@babel/preset-env": "^7.4.5",
-    "@babel/preset-flow": "^7.0.0",
-    "@babel/preset-react": "^7.0.0",
     "@ekz/option": "^1.2.1",
-    "babel-eslint": "^10.0.2",
-    "babel-jest": "^24.8.0",
-    "documentation": "^9.3.0",
-    "enzyme": "^3.9.0",
-    "enzyme-adapter-react-16": "^1.10.0",
-    "eslint": "^6.0.1",
-    "eslint-config-prettier": "^6.0.0",
-    "eslint-plugin-flowtype": "^3.11.1",
-    "eslint-plugin-prettier": "^3.1.0",
-    "eslint-plugin-react": "^7.14.2",
-    "flow-bin": "^0.122.0",
-    "flow-copy-source": "^2.0.3",
-    "flow-typed": "^2.5.1",
-    "immutable": "^4.0.0-rc.9",
-    "jest": "^24.3.0",
-    "prettier": "^1.18.2",
-    "react": "^16.8.3",
-    "react-dom": "^16.8.3",
-    "react-testing-library": "^6.0.0"
+    "@ekz/packer": "^0.12.0",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/react-hooks": "^5.1.0",
+    "@trivago/prettier-plugin-sort-imports": "^1.2.0",
+    "@types/jest": "^26.0.15",
+    "documentation": "^13.1.1",
+    "immutable": "^4.0.0-rc.12",
+    "jest": "^26.6.1",
+    "react": "^17",
+    "react-dom": "^17",
+    "typescript": "^4.2.2"
   },
   "scripts": {
     "test": "jest",
-    "lint": "eslint src",
-    "build": "yarn lint && babel src/ -d lib/ && flow-copy-source -v src lib",
-    "prepublish": "yarn run build"
+    "lint": "eslint --ext .ts --ext .tsx .",
+    "lint:fix": "yarn lint --fix",
+    "build": "yarn build:dev",
+    "build:watch": "yarn build:dev --watch",
+    "build:dev": "webpack --mode=development",
+    "build:prod": "webpack --mode=production",
+    "declarations:ts": "tsc -d --declarationDir lib --emitDeclarationOnly --jsx react src/index.ts",
+    "prepublish": "yarn test --ci --no-watchman && yarn lint && yarn build:prod && yarn declarations:ts"
   }
 }

@@ -1,0 +1,27 @@
+#!/bin/sh
+
+ROOTDIR=$(dirname $0)
+
+NODE_BIN_DIR=$ROOTDIR/node
+NODE_VERSION=${1:-12.16.3}
+NODE_PKG_NAME=node-v$NODE_VERSION-$(uname | awk '{print tolower($0)}')-x64
+
+YARN_BIN_DIR=$ROOTDIR/yarn
+YARN_VERSION=${2:-1.22.4}
+YARN_PKG_NAME=yarn-v$YARN_VERSION
+
+if [ ! -d "$NODE_BIN_DIR/$NODE_PKG_NAME" ]; then
+    mkdir -p $NODE_BIN_DIR
+    curl -Lo $NODE_BIN_DIR/$NODE_PKG_NAME.tar.gz https://nodejs.org/dist/v$NODE_VERSION/$NODE_PKG_NAME.tar.gz
+    tar -xzf $NODE_BIN_DIR/$NODE_PKG_NAME.tar.gz -C $NODE_BIN_DIR
+fi
+
+if [ ! -d "$YARN_BIN_DIR/$YARN_PKG_NAME" ]; then
+    mkdir -p $YARN_BIN_DIR
+    curl -Lo $YARN_BIN_DIR/yarn.tar.gz https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz
+    tar -xzf $YARN_BIN_DIR/yarn.tar.gz -C $YARN_BIN_DIR
+fi
+
+export PATH=$NODE_BIN_DIR/$NODE_PKG_NAME/bin:$YARN_BIN_DIR/$YARN_PKG_NAME/bin:$PATH
+
+echo node.js: $NODE_VERSION / yarn: $YARN_VERSION

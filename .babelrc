@@ -1,19 +1,37 @@
 {
     "presets": [
-        "@babel/env",
-        "@babel/flow",
+        "@babel/typescript",
         "@babel/react"
     ],
     "plugins": [
-        [
-            "@babel/plugin-proposal-class-properties",
-            {
-                "loose": true
-            }
-        ]
+        "@babel/proposal-class-properties",
+        "@babel/proposal-object-rest-spread"
     ],
     "only": [
-        "__tests__",
         "src"
-    ]
+    ],
+    "env": {
+        "development": {
+            "presets": [
+                [
+                    "@babel/env",
+                    {
+                        "targets": "> 0.25%, not dead"
+                    }
+                ]
+            ]
+        },
+        "test": {
+            "presets": [
+                [
+                    "@babel/env",
+                    {
+                        "targets": {
+                            "node": "current"
+                        }
+                    }
+                ]
+            ]
+        }
+    }
 }

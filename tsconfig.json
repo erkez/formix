@@ -1,0 +1,15 @@
+{
+    "extends": "./node_modules/@ekz/packer/tsconfig/recommended",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@root/*": [
+                "./src/*"
+            ]
+        },
+        "declarationDir": "./dist",
+        "noEmit": false,
+        "declaration": true,
+        "emitDeclarationOnly": true
+    }
+}
