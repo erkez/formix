@@ -7,7 +7,6 @@ export type GenericFieldRef =
 
 export interface FieldRef<T> {
     readonly initialState: FieldState<T>;
-    readonly initialValue: T;
 }
 
 export interface ArrayFieldRef<T extends GenericFieldRef, V> extends FieldRef<List<T>> {

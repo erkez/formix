@@ -6,7 +6,7 @@ import { ArrayFieldRef, FieldRef, FieldState, GenericFieldRef } from './types';
 class FieldRefImpl<V> implements FieldRef<V> {
     readonly initialState: FieldState<V>;
 
-    constructor(readonly initialValue: V, initialDisabled: boolean) {
+    constructor(initialValue: V, initialDisabled: boolean) {
         this.initialState = new FieldStateImpl(initialValue, initialDisabled, false, false);
     }
 }
@@ -28,6 +28,7 @@ class ArrayFieldRefImpl<T extends GenericFieldRef, V>
         initialDisabled: boolean
     ) {
         super(initialItems, initialDisabled);
+        this.itemTemplate = itemTemplate;
     }
 }
 

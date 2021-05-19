@@ -5,13 +5,11 @@ describe('references', () => {
         const fieldRef = defineField('fizz');
 
         it('should define FieldRef', () => {
-            expect(fieldRef.initialValue).toBe('fizz');
             expect(fieldRef.initialState).toMatchSnapshot();
         });
 
         it('should define FieldRef initially disabled', () => {
             const disabledFieldRef = defineField('', true);
-            expect(disabledFieldRef.initialValue).toBe('');
             expect(disabledFieldRef.initialState.disabled).toBe(true);
         });
 
@@ -25,7 +23,7 @@ describe('references', () => {
         const arrayFieldRef = defineArrayField(['fizz'], (value) => ({ name: defineField(value) }));
 
         it('should define ArrayFieldRef', () => {
-            expect(arrayFieldRef.initialValue).toMatchSnapshot();
+            expect(arrayFieldRef.initialState).toMatchSnapshot();
         });
 
         it('should define ArrayFieldRef initially disabled', () => {

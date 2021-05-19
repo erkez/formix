@@ -1,6 +1,6 @@
 {
   "name": "@ekz/formix",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "Type-safe React form to be used with Typescript",
   "keywords": [
     "react",
