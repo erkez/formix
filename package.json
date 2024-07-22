@@ -1,6 +1,7 @@
 {
   "name": "@ekz/formix",
-  "version": "1.0.0-beta.4",
+  "packageManager": "yarn@4.3.1",
+  "version": "1.0.0",
   "description": "Type-safe React form to be used with Typescript",
   "keywords": [
     "react",
@@ -24,7 +25,6 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "license": "MIT",
-  "private": false,
   "files": [
     "lib",
     "README.md",
@@ -32,34 +32,34 @@
   ],
   "peerDependencies": {
     "@ekz/option": "^1.2.1",
-    "immutable": "^4.0.0-rc.12",
-    "react": "^16.8.0 || ^17",
-    "typescript": "^4"
+    "immutable": "^4",
+    "react": "^16.8.0 || ^17 || ^18",
+    "typescript": "^4 || ^5"
   },
   "devDependencies": {
-    "@ekz/option": "^1.2.1",
-    "@ekz/packer": "^0.12.0",
+    "@ekz/option": "^1.2.5",
+    "@ekz/packer": "^0.16.0",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.1.0",
     "@testing-library/react-hooks": "^5.1.0",
-    "@trivago/prettier-plugin-sort-imports": "^1.2.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/jest": "^26.0.15",
     "documentation": "^13.1.1",
-    "immutable": "^4.0.0-rc.12",
+    "immutable": "^4.3.6",
     "jest": "^26.6.1",
-    "react": "^17",
-    "react-dom": "^17",
-    "typescript": "^4.2.2"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.5.3"
   },
   "scripts": {
-    "test": "jest",
-    "lint": "eslint --ext .ts --ext .tsx .",
+    "test": "npx jest",
+    "lint": "npx eslint --ext .ts --ext .tsx .",
     "lint:fix": "yarn lint --fix",
     "build": "yarn build:dev",
     "build:watch": "yarn build:dev --watch",
-    "build:dev": "webpack --mode=development",
-    "build:prod": "webpack --mode=production",
-    "declarations:ts": "tsc -d --declarationDir lib --emitDeclarationOnly --jsx react src/index.ts",
+    "build:dev": "npx webpack --mode=development",
+    "build:prod": "npx webpack --mode=production",
+    "declarations:ts": "npx tsc -d --declarationDir lib --emitDeclarationOnly --jsx react src/index.ts",
     "prepublish": "yarn test --ci --no-watchman && yarn lint && yarn build:prod && yarn declarations:ts"
   }
 }

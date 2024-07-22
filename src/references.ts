@@ -21,7 +21,8 @@ export function isFieldRef(field: unknown): field is FieldRef<unknown> {
 
 class ArrayFieldRefImpl<T extends GenericFieldRef, V>
     extends FieldRefImpl<List<T>>
-    implements ArrayFieldRef<T, V> {
+    implements ArrayFieldRef<T, V>
+{
     constructor(
         initialItems: List<T>,
         readonly itemTemplate: (value: V) => T,

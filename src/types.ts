@@ -86,23 +86,25 @@ export interface ArrayField<T extends GenericFieldRef, V>
     swap(indexA: number, indexB: number): void;
 }
 
-export type FormStates<F> = F extends ArrayFieldRef<infer T, unknown>
-    ? List<FormStates<T>>
-    : F extends FieldRef<infer T>
-    ? FieldState<T>
-    : F extends { [K: string]: GenericFieldRef }
-    ? { [K in keyof F]: FormStates<F[K]> }
-    : never;
+export type FormStates<F> =
+    F extends ArrayFieldRef<infer T, unknown>
+        ? List<FormStates<T>>
+        : F extends FieldRef<infer T>
+          ? FieldState<T>
+          : F extends { [K: string]: GenericFieldRef }
+            ? { [K in keyof F]: FormStates<F[K]> }
+            : never;
 
 export type FieldRefStates<T extends GenericFieldRef[]> = { [K in keyof T]: FormStates<T[K]> };
 
-export type FormValues<F> = F extends ArrayFieldRef<infer T, unknown>
-    ? List<FormValues<T>>
-    : F extends FieldRef<infer T>
-    ? T
-    : F extends { [K: string]: GenericFieldRef }
-    ? { [K in keyof F]: FormValues<F[K]> }
-    : never;
+export type FormValues<F> =
+    F extends ArrayFieldRef<infer T, unknown>
+        ? List<FormValues<T>>
+        : F extends FieldRef<infer T>
+          ? T
+          : F extends { [K: string]: GenericFieldRef }
+            ? { [K in keyof F]: FormValues<F[K]> }
+            : never;
 
 export type FieldRefValues<T extends GenericFieldRef[]> = { [K in keyof T]: FormValues<T[K]> };
 

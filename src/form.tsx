@@ -16,9 +16,10 @@ function useFormApi(): FormApi {
         [fieldStates]
     );
 
-    const getFieldValue = React.useCallback((fieldRef) => getFieldState(fieldRef).value, [
-        getFieldState
-    ]);
+    const getFieldValue = React.useCallback<FormApi['getFieldValue']>(
+        (fieldRef) => getFieldState(fieldRef).value,
+        [getFieldState]
+    );
 
     const setFieldState = React.useCallback(function setFieldState<T>(
         fieldRef: FieldRef<T>,
@@ -29,8 +30,7 @@ function useFormApi(): FormApi {
                 ? xs.update(fieldRef, fieldRef.initialState, state)
                 : xs.set(fieldRef, state)
         );
-    },
-    []);
+    }, []);
 
     const extract = React.useCallback(
         (fields: GenericFieldRef, type: 'value' | 'state') => {
@@ -148,7 +148,9 @@ export function useFormWithFields<Deps extends unknown[], F extends GenericField
     );
 }
 
-export function withForm<Props>(Component: React.ComponentType<Props>): React.ComponentType<Props> {
+export function withForm<Props extends JSX.IntrinsicAttributes>(
+    Component: React.ComponentType<Props>
+): React.ComponentType<Props> {
     return function WithForm(props: Props): React.ReactElement {
         return (
             <FormProvider>

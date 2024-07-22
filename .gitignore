@@ -2,4 +2,5 @@ bin/node/
 bin/yarn/
 node_modules/
 lib/
+.yarn/
 *.log

@@ -29,7 +29,7 @@ export function useField<T>(fieldRef: FieldRef<T>): Field<T> {
     );
 
     const setDisabled = React.useCallback(
-        (disabled) => setFieldState(fieldRef, (state) => state.updated({ disabled })),
+        (disabled: boolean) => setFieldState(fieldRef, (state) => state.updated({ disabled })),
         [fieldRef, setFieldState]
     );
 
@@ -96,7 +96,7 @@ export function useArrayField<T extends GenericFieldRef, V>(
     );
 
     const insert = React.useCallback(
-        (index, value) => {
+        (index: number, value: V) => {
             const item = fieldRef.itemTemplate(value);
             setValue((items) => items.insert(index, item));
             return item;
@@ -115,7 +115,7 @@ export function useArrayField<T extends GenericFieldRef, V>(
     );
 
     const swap = React.useCallback(
-        (indexA, indexB) => {
+        (indexA: number, indexB: number) => {
             setValue((previous) => {
                 const itemA = previous.get(indexA);
                 const itemB = previous.get(indexB);
