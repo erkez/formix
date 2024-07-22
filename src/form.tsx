@@ -148,12 +148,12 @@ export function useFormWithFields<Deps extends unknown[], F extends GenericField
     );
 }
 
-export function withForm<Props extends JSX.IntrinsicAttributes>(
-    Component: React.ComponentType<Props>
-): React.ComponentType<Props> {
+export function withForm<Props>(Component: React.ComponentType<Props>): React.ComponentType<Props> {
     return function WithForm(props: Props): React.ReactElement {
         return (
             <FormProvider>
+                {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+                {/* @ts-ignore-error */}
                 <Component {...props} />
             </FormProvider>
         );
