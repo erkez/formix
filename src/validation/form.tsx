@@ -34,9 +34,13 @@ export function useFormValidation(getFieldState: FormApi['getFieldState']): Form
 
     const getValidationResult: FormValidationApi['getValidationResult'] = React.useCallback(
         (fieldRef) => {
-            return validations
-                .get(fieldRef, OrderedSet<FieldValidation<unknown>>())
-                .first(EmptyValidationResult);
+            return validations.get(fieldRef, OrderedSet<FieldValidation<unknown>>()).reduce(
+                (result, validation) => ({
+                    error: result.error || validation.error,
+                    pending: result.pending || validation.pending
+                }),
+                EmptyValidationResult
+            );
         },
         [validations]
     );
