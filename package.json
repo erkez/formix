@@ -1,7 +1,7 @@
 {
   "name": "@ekz/formix",
-  "packageManager": "yarn@4.9.2",
-  "version": "1.0.2",
+  "packageManager": "yarn@4.12.0",
+  "version": "1.1.0",
   "description": "Type-safe React form to be used with Typescript",
   "keywords": [
     "react",
@@ -32,24 +32,29 @@
   ],
   "peerDependencies": {
     "@ekz/option": "^1.2.1",
-    "immutable": "^4",
-    "react": "^16.8.0 || ^17 || ^18",
+    "immutable": "^4 || ^5",
+    "react": "^16.8.0 || ^17 || ^18 || ^19",
     "typescript": "^4 || ^5"
   },
   "devDependencies": {
-    "@ekz/option": "^1.2.5",
+    "@ekz/option": "^1.2.6",
     "@ekz/packer": "^0.16.0",
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/react-hooks": "^5.1.0",
-    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
-    "@types/jest": "^26.0.15",
-    "documentation": "^13.1.1",
-    "immutable": "^4.3.6",
-    "jest": "^26.6.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "typescript": "^5.5.3"
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.0.2",
+    "@types/react": "^19.2.7",
+    "documentation": "^14.0.3",
+    "immutable": "^5.1.4",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "typescript": "^5.9.3"
   },
   "scripts": {
     "test": "npx jest",
@@ -61,5 +66,8 @@
     "build:prod": "npx webpack --mode=production",
     "declarations:ts": "npx tsc -d --declarationDir lib --emitDeclarationOnly --jsx react src/index.ts",
     "prepublish": "yarn test --ci --no-watchman && yarn lint && yarn build:prod && yarn declarations:ts"
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
   }
 }

@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 
 import { useField } from './fields';
@@ -33,6 +33,8 @@ describe('form', () => {
     });
 
     it('should render a FormProvider with fields', async () => {
+        const user = userEvent.setup();
+
         const Form = withForm(function Form() {
             const { fields } = useFormWithFields(
                 () => ({
@@ -56,8 +58,8 @@ describe('form', () => {
 
         const { findByTestId, findByDisplayValue } = render(<Form />);
         const input = await findByDisplayValue('fizz');
-        fireEvent.change(input, { target: { value: 'buzz' } });
+        await user.type(input, 'buzz');
         const nameElement = await findByTestId('name');
-        expect(nameElement).toHaveTextContent('buzz');
+        expect(nameElement.textContent).toBe('fizzbuzz');
     });
 });
